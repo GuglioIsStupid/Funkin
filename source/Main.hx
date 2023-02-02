@@ -11,6 +11,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.NetStatusEvent;
 import openfl.net.NetConnection;
+import openfl.media.Video;
 import openfl.net.NetStream;
 
 class Main extends Sprite
@@ -59,6 +60,7 @@ class Main extends Sprite
 		setupGame();
 	}
 
+	var video:Video;
 	var netStream:NetStream;
 	private var overlay:Sprite;
 

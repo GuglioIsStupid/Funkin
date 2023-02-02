@@ -120,6 +120,8 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
 
+	<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
+
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
 	<!--haxelib name="newgrounds" unless="switch"/> -->

@@ -938,18 +938,26 @@ class PlayState extends MusicBeatState
 		blackShit.scrollFactor.set();
 		add(blackShit);
 
-		/*
-		//var vid:FlxVideo = new FlxVideo('music/ughCutscene.mp4');
-		vid.finishCallback = function()
-		{
-			
-		};
-		*/
+		#if web
+			var vid:FlxVideo = new FlxVideo('music/ughCutscene.mp4');
+			vid.finishCallback = function()
+			{
+				remove(blackShit);
+				FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+				startCountdown();
+				cameraMovement();
+			};	
 
-		FlxG.camera.zoom = defaultCamZoom * 1.2;
+			FlxG.camera.zoom = defaultCamZoom * 1.2;
 
-		camFollow.x += 100;
-		camFollow.y += 100;
+			camFollow.x += 100;
+			camFollow.y += 100;
+		#else
+			remove(blackShit);
+			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+			startCountdown();
+			cameraMovement();
+		#end
 
 		/* 
 			FlxG.sound.playMusic(Paths.music('DISTORTO'), 0);
@@ -1013,12 +1021,6 @@ class PlayState extends MusicBeatState
 					});
 				});
 		});*/
-
-		// temporary cuz vids dont work on desktop LOL
-		remove(blackShit);
-		FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
-		startCountdown();
-		cameraMovement();
 	}
 
 	function gunsIntro()
@@ -1029,13 +1031,22 @@ class PlayState extends MusicBeatState
 		blackShit.scrollFactor.set();
 		add(blackShit);
 
-		/*
-		var vid:FlxVideo = new FlxVideo('music/gunsCutscene.mp4');
-		vid.finishCallback = function()
-		{
-			
-		};
-		*/
+		#if web
+			var vid:FlxVideo = new FlxVideo('music/gunsCutscene.mp4');
+			vid.finishCallback = function()
+			{
+				remove(blackShit);
+
+				FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+				startCountdown();
+				cameraMovement();
+			};
+		#else
+			remove(blackShit);
+			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+			startCountdown();
+			cameraMovement();
+		#end
 
 		/* camFollow.setPosition(camPos.x, camPos.y);
 
@@ -1080,12 +1091,6 @@ class PlayState extends MusicBeatState
 
 				camHUD.visible = true;
 		});*/
-
-		remove(blackShit);
-
-		FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
-		startCountdown();
-		cameraMovement();
 	}
 
 	/**
@@ -1107,13 +1112,22 @@ class PlayState extends MusicBeatState
 		blackShit.scrollFactor.set();
 		add(blackShit);
 
-		/*
-		var vid:FlxVideo = new FlxVideo('music/stressCutscene.mp4');
-		vid.finishCallback = function()
-		{
-			
-		};
-		*/
+		#if web
+			var vid:FlxVideo = new FlxVideo('music/stressCutscene.mp4');
+			vid.finishCallback = function()
+			{
+				remove(blackShit);
+
+				FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+				startCountdown();
+				cameraMovement();
+			};
+		#else
+			remove(blackShit);
+			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+			startCountdown();
+			cameraMovement();
+		#end
 
 		/* camHUD.visible = false;
 
@@ -1349,12 +1363,6 @@ class PlayState extends MusicBeatState
 					gfCutsceneLayer.remove(cutsceneShit);
 				});
 		});*/
-
-		remove(blackShit);
-
-		FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
-		startCountdown();
-		cameraMovement();
 	}
 
 	function initDiscord():Void
@@ -2324,6 +2332,8 @@ class PlayState extends MusicBeatState
 
 				switch (PlayState.storyWeek)
 				{
+					case 7:
+						FlxG.switchState(new VideoState());
 					default:
 						FlxG.switchState(new StoryMenuState());
 				}

@@ -26,6 +26,7 @@ import openfl.events.AsyncErrorEvent;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.NetStatusEvent;
+import openfl.media.Video;import openfl.media.Video;
 import openfl.net.NetConnection;
 import openfl.net.NetStream;
 import shaderslmfao.BuildingShaders.BuildingShader;
@@ -62,6 +63,7 @@ class TitleState extends MusicBeatState
 	var alphaShader:BuildingShaders;
 	var thingie:FlxSprite;
 
+	var video:Video;
 	var netStream:NetStream;
 	private var overlay:Sprite;
 
@@ -112,6 +114,20 @@ class TitleState extends MusicBeatState
 		});
 		#end
 	}
+
+	private function client_onMetaData(metaData:Dynamic)
+		{
+			video.attachNetStream(netStream);
+	
+			video.width = video.videoWidth;
+			video.height = video.videoHeight;
+			// video.
+		}
+	
+		private function netStream_onAsyncError(event:AsyncErrorEvent):Void
+		{
+			trace("Error loading video");
+		}
 
 	private function netConnection_onNetStatus(event:NetStatusEvent):Void
 	{
