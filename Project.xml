@@ -123,7 +123,7 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
 
-	<define name="useHXCodec" if="web || windows" unless="32bits"/>
+	<define name="useHXCodec" if="windows" unless="32bits"/>
 	<haxelib name="hxCodec" if="desktop || android" />
 
 	<!--In case you want to use the ui package-->

@@ -955,7 +955,7 @@ class PlayState extends MusicBeatState
 		add(blackShit);
 
 		#if web
-			var vid:FlxVideo = new FlxVideo('music/ughCutscene.mp4');
+			var vid:FlxVideo = new FlxVideo('ughCutscene.mp4');
 			vid.finishCallback = function()
 			{
 				remove(blackShit);
@@ -988,7 +988,7 @@ class PlayState extends MusicBeatState
 		add(blackShit);
 
 		#if web
-			var vid:FlxVideo = new FlxVideo('music/gunsCutscene.mp4');
+			var vid:FlxVideo = new FlxVideo('gunsCutscene.mp4');
 			vid.finishCallback = function()
 			{
 				remove(blackShit);
@@ -1072,7 +1072,7 @@ class PlayState extends MusicBeatState
 		add(blackShit);
 
 		#if web
-			var vid:FlxVideo = new FlxVideo('music/stressCutscene.mp4');
+			var vid:FlxVideo = new FlxVideo('stressCutscene.mp4');
 			vid.finishCallback = function()
 			{
 				remove(blackShit);
