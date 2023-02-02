@@ -2124,37 +2124,44 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		while (unspawnNotes[0] != null && unspawnNotes[0].strumTime - Conductor.songPosition < 1800 / SONG.speed)
-		{
-			var dunceNote:Note = unspawnNotes[0];
-			notes.add(dunceNote);
+		var roundedSpeed:Float = FlxMath.roundDecimal(SONG.speed, 2);
+		var time:Float = 3000;
+			if (roundedSpeed < 1)
+				time /= roundedSpeed;
 
-			var index:Int = unspawnNotes.indexOf(dunceNote);
-			unspawnNotes.shift();
+		if (unspawnNotes[0] != null)
+		{
+			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
+			{
+				var dunceNote:Note = unspawnNotes[0];
+				notes.add(dunceNote);
+		
+				var index:Int = unspawnNotes.indexOf(dunceNote);
+				unspawnNotes.shift();
+			}
 		}
+
+		var downscrollMulti = (PreferencesMenu.getPref('downscroll') ? -1 : 1);
 
 		if (generatedMusic)
 		{
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if ((PreferencesMenu.getPref('downscroll') && daNote.y < -daNote.height)
-					|| (!PreferencesMenu.getPref('downscroll') && daNote.y > FlxG.height))
-				{
+				if (daNote.y > FlxG.height) {
 					daNote.active = false;
 					daNote.visible = false;
-				}
-				else
-				{
-					daNote.visible = true;
+				} else {
 					daNote.active = true;
+					daNote.visible = true;
 				}
+
 
 				var strumLineMid = strumLine.y + Note.swagWidth / 2;
 
+				daNote.y = (strumLine.y + (downscrollMulti * -((Conductor.songPosition - daNote.strumTime) * 0.45 * roundedSpeed)));
+
 				if (PreferencesMenu.getPref('downscroll'))
 				{
-					daNote.y = (strumLine.y + (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
-
 					if (daNote.isSustainNote)
 					{
 						if (daNote.animation.curAnim.name.endsWith("end") && daNote.prevNote != null)
@@ -2176,8 +2183,6 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
-
 					if (daNote.isSustainNote
 						&& (!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit)))
 						&& daNote.y + daNote.offset.y * daNote.scale.y <= strumLineMid)
