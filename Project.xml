@@ -44,7 +44,10 @@
 
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/preload" rename="assets" exclude="*.mp3" unless="web"/>
-	
+
+	<assets path="assets/videos" exclude="*.mp3" if="web"/>
+	<assets path="assets/videos" exclude="*.ogg" unless="web"/>
+
 	<!-- <define name="PRELOAD_ALL" /> -->
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
@@ -120,7 +123,8 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
 
-	<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
+	<define name="useHXCodec" if="web || windows" unless="32bits"/>
+	<haxelib name="hxCodec" if="desktop || android" />
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
