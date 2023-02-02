@@ -218,6 +218,10 @@ class PlayState extends MusicBeatState
 		initDiscord();
 		#end
 
+		FlxG.sound.cache("sounds/missnote1");
+		FlxG.sound.cache("sounds/missnote2");
+		FlxG.sound.cache("sounds/missnote3");
+
 		switch (SONG.song.toLowerCase())
 		{
 			case 'spookeez' | 'monster' | 'south':
@@ -2737,7 +2741,7 @@ class PlayState extends MusicBeatState
 			{
 				for (shit in 0...pressArray.length)
 					if (pressArray[shit])
-						noteMiss(shit);
+						noteMissPressed(shit);
 			}
 		}
 
@@ -2768,6 +2772,40 @@ class PlayState extends MusicBeatState
 	}
 
 	function noteMiss(direction:Int = 1):Void
+	{
+		//if (PreferencesMenu.getPref("ghost-tapping")){ return; }
+		// whole function used to be encased in if (!boyfriend.stunned)
+		health -= 0.04;
+		killCombo();
+
+		if (!practiceMode)
+			songScore -= 10;
+
+		vocals.volume = 0;
+		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+
+		/* boyfriend.stunned = true;
+
+		// get stunned for 5 seconds
+		new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
+		{
+			boyfriend.stunned = false;
+		}); */
+
+		switch (direction)
+		{
+			case 0:
+				boyfriend.playAnim('singLEFTmiss', true);
+			case 1:
+				boyfriend.playAnim('singDOWNmiss', true);
+			case 2:
+				boyfriend.playAnim('singUPmiss', true);
+			case 3:
+				boyfriend.playAnim('singRIGHTmiss', true);
+		}
+	}
+
+	function noteMissPressed(direction:Int = 1):Void
 	{
 		if (PreferencesMenu.getPref("ghost-tapping")){ return; }
 		// whole function used to be encased in if (!boyfriend.stunned)
