@@ -2769,6 +2769,7 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1):Void
 	{
+		if (PreferencesMenu.getPref("ghost-tapping")){ return; }
 		// whole function used to be encased in if (!boyfriend.stunned)
 		health -= 0.04;
 		killCombo();
