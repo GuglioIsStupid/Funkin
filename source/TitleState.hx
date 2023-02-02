@@ -26,7 +26,6 @@ import openfl.events.AsyncErrorEvent;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.NetStatusEvent;
-import openfl.media.Video;
 import openfl.net.NetConnection;
 import openfl.net.NetStream;
 import shaderslmfao.BuildingShaders.BuildingShader;
@@ -63,17 +62,11 @@ class TitleState extends MusicBeatState
 	var alphaShader:BuildingShaders;
 	var thingie:FlxSprite;
 
-	var video:Video;
 	var netStream:NetStream;
 	private var overlay:Sprite;
 
 	override public function create():Void
 	{
-		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod'], framework: OPENFL});
-		// FlxG.bitmap.clearCache();
-		#end
-
 		startedIntro = false;
 
 		FlxG.game.focusLostFramerate = 60;
@@ -94,10 +87,6 @@ class TitleState extends MusicBeatState
 		PlayerSettings.init();
 		Highscore.load();
 
-		#if newgrounds
-		NGio.init();
-		#end
-
 		if (FlxG.save.data.weekUnlocked != null)
 		{
 			// FIX LATER!!!
@@ -112,54 +101,7 @@ class TitleState extends MusicBeatState
 				StoryMenuState.weekUnlocked[0] = true;
 		}
 
-		if (FlxG.save.data.seenVideo != null)
-		{
-			VideoState.seenVideo = FlxG.save.data.seenVideo;
-		}
-
-		#if FREEPLAY
-		FlxG.switchState(new FreeplayState());
-		#elseif ANIMATE
-		FlxG.switchState(new CutsceneAnimTestState());
-		#elseif CHARTING
-		FlxG.switchState(new ChartingState());
-		/* 
-			#elseif web
-
-
-			if (!initialized)
-			{
-
-				video = new Video();
-				FlxG.stage.addChild(video);
-
-				var netConnection = new NetConnection();
-				netConnection.connect(null);
-
-				netStream = new NetStream(netConnection);
-				netStream.client = {onMetaData: client_onMetaData};
-				netStream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, netStream_onAsyncError);
-				netConnection.addEventListener(NetStatusEvent.NET_STATUS, netConnection_onNetStatus);
-				// netStream.addEventListener(NetStatusEvent.NET_STATUS) // netStream.play(Paths.file('music/kickstarterTrailer.mp4'));
-
-				overlay = new Sprite();
-				overlay.graphics.beginFill(0, 0.5);
-				overlay.graphics.drawRect(0, 0, 1280, 720);
-				overlay.addEventListener(MouseEvent.MOUSE_DOWN, overlay_onMouseDown);
-
-				overlay.buttonMode = true;
-				// FlxG.stage.addChild(overlay);
-
-			}
-		 */
-
-		// netConnection.addEventListener(MouseEvent.MOUSE_DOWN, overlay_onMouseDown);
-		#else
-		new FlxTimer().start(1, function(tmr:FlxTimer)
-		{
-			startIntro();
-		});
-		#end
+		startIntro();
 
 		#if discord_rpc
 		DiscordClient.initialize();
@@ -171,27 +113,10 @@ class TitleState extends MusicBeatState
 		#end
 	}
 
-	private function client_onMetaData(metaData:Dynamic)
-	{
-		video.attachNetStream(netStream);
-
-		video.width = video.videoWidth;
-		video.height = video.videoHeight;
-		// video.
-	}
-
-	private function netStream_onAsyncError(event:AsyncErrorEvent):Void
-	{
-		trace("Error loading video");
-	}
-
 	private function netConnection_onNetStatus(event:NetStatusEvent):Void
 	{
 		if (event.info.code == 'NetStream.Play.Complete')
 		{
-			// netStream.dispose();
-			// FlxG.stage.removeChild(video);
-
 			startIntro();
 		}
 
@@ -323,7 +248,7 @@ class TitleState extends MusicBeatState
 			initialized = true;
 
 		if (FlxG.sound.music != null)
-			FlxG.sound.music.onComplete = function() FlxG.switchState(new VideoState());
+			FlxG.sound.music.onComplete = function() FlxG.switchState(new MainMenuState());
 
 		startedIntro = true;
 		// credGroup.add(credTextShit);
@@ -352,17 +277,6 @@ class TitleState extends MusicBeatState
 		if (FlxG.keys.justPressed.EIGHT)
 			FlxG.switchState(new CutsceneAnimTestState());
 		#end
-
-		/* 
-			if (FlxG.keys.justPressed.R)
-			{
-				#if polymod
-				polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
-				trace('reinitialized');
-				#end
-			}
-
-		 */
 
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
@@ -399,12 +313,6 @@ class TitleState extends MusicBeatState
 			if (FlxG.sound.music != null)
 				FlxG.sound.music.onComplete = null;
 			// netStream.play(Paths.file('music/kickstarterTrailer.mp4'));
-			NGio.unlockMedal(60960);
-
-			// If it's Friday according to da clock
-			if (Date.now().getDay() == 5)
-				NGio.unlockMedal(61034);
-
 			titleText.animation.play('press');
 
 			FlxG.camera.flash(FlxColor.WHITE, 1);
@@ -413,33 +321,7 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			// FlxG.sound.music.stop();
 
-			#if newgrounds
-			if (!OutdatedSubState.leftState)
-			{
-				NGio.checkVersion(function(version)
-				{
-					// Check if version is outdated
-
-					var localVersion:String = "v" + Application.current.meta.get('version');
-					var onlineVersion = version.split(" ")[0].trim();
-
-					if (version.trim() != onlineVersion)
-					{
-						trace('OLD VERSION!');
-						// FlxG.switchState(new OutdatedSubState());
-					}
-					else
-					{
-						// FlxG.switchState(new MainMenuState());
-					}
-
-					// REDO FOR ITCH/FINAL SHIT
-					FlxG.switchState(new MainMenuState());
-				});
-			}
-			#else
 			FlxG.switchState(new MainMenuState());
-			#end
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 

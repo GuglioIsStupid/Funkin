@@ -938,14 +938,13 @@ class PlayState extends MusicBeatState
 		blackShit.scrollFactor.set();
 		add(blackShit);
 
-		var vid:FlxVideo = new FlxVideo('music/ughCutscene.mp4');
+		/*
+		//var vid:FlxVideo = new FlxVideo('music/ughCutscene.mp4');
 		vid.finishCallback = function()
 		{
-			remove(blackShit);
-			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
-			startCountdown();
-			cameraMovement();
+			
 		};
+		*/
 
 		FlxG.camera.zoom = defaultCamZoom * 1.2;
 
@@ -1014,6 +1013,12 @@ class PlayState extends MusicBeatState
 					});
 				});
 		});*/
+
+		// temporary cuz vids dont work on desktop LOL
+		remove(blackShit);
+		FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+		startCountdown();
+		cameraMovement();
 	}
 
 	function gunsIntro()
@@ -1024,15 +1029,13 @@ class PlayState extends MusicBeatState
 		blackShit.scrollFactor.set();
 		add(blackShit);
 
+		/*
 		var vid:FlxVideo = new FlxVideo('music/gunsCutscene.mp4');
 		vid.finishCallback = function()
 		{
-			remove(blackShit);
-
-			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
-			startCountdown();
-			cameraMovement();
+			
 		};
+		*/
 
 		/* camFollow.setPosition(camPos.x, camPos.y);
 
@@ -1077,6 +1080,12 @@ class PlayState extends MusicBeatState
 
 				camHUD.visible = true;
 		});*/
+
+		remove(blackShit);
+
+		FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+		startCountdown();
+		cameraMovement();
 	}
 
 	/**
@@ -1098,15 +1107,13 @@ class PlayState extends MusicBeatState
 		blackShit.scrollFactor.set();
 		add(blackShit);
 
+		/*
 		var vid:FlxVideo = new FlxVideo('music/stressCutscene.mp4');
 		vid.finishCallback = function()
 		{
-			remove(blackShit);
-
-			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
-			startCountdown();
-			cameraMovement();
+			
 		};
+		*/
 
 		/* camHUD.visible = false;
 
@@ -1342,6 +1349,12 @@ class PlayState extends MusicBeatState
 					gfCutsceneLayer.remove(cutsceneShit);
 				});
 		});*/
+
+		remove(blackShit);
+
+		FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, (Conductor.crochet / 1000) * 5, {ease: FlxEase.quadInOut});
+		startCountdown();
+		cameraMovement();
 	}
 
 	function initDiscord():Void
@@ -2311,8 +2324,6 @@ class PlayState extends MusicBeatState
 
 				switch (PlayState.storyWeek)
 				{
-					case 7:
-						FlxG.switchState(new VideoState());
 					default:
 						FlxG.switchState(new StoryMenuState());
 				}
@@ -2322,7 +2333,6 @@ class PlayState extends MusicBeatState
 
 				if (SONG.validScore)
 				{
-					NGio.unlockMedal(60961);
 					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 				}
 

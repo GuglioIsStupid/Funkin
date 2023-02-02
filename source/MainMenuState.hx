@@ -1,6 +1,5 @@
 package;
 
-import NGio;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -26,10 +25,6 @@ using StringTools;
 
 #if discord_rpc
 import Discord.DiscordClient;
-#end
-#if newgrounds
-import io.newgrounds.NG;
-import ui.NgPrompt;
 #end
 
 class MainMenuState extends MusicBeatState
@@ -97,19 +92,9 @@ class MainMenuState extends MusicBeatState
 		#if CAN_OPEN_LINKS
 		var hasPopupBlocker = #if web true #else false #end;
 
-		if (VideoState.seenVideo)
-			menuItems.createItem('kickstarter', selectDonate, hasPopupBlocker);
-		else
-			menuItems.createItem('donate', selectDonate, hasPopupBlocker);
+		menuItems.createItem('donate', selectDonate, hasPopupBlocker);
 		#end
 		menuItems.createItem('options', function() startExitState(new OptionsState()));
-		// #if newgrounds
-		// 	if (NGio.isLoggedIn)
-		// 		menuItems.createItem("logout", selectLogout);
-		// 	else
-		// 		menuItems.createItem("login", selectLogin);
-		// #end
-
 		// center vertically
 		var spacing = 160;
 		var top = (FlxG.height - (spacing * (menuItems.length - 1))) / 2;
@@ -141,11 +126,6 @@ class MainMenuState extends MusicBeatState
 		super.finishTransIn();
 
 		menuItems.enabled = true;
-
-		// #if newgrounds
-		// if (NGio.savedSessionFailed)
-		// 	showSavedSessionFailed();
-		// #end
 	}
 
 	function onMenuItemChange(selected:MenuItem)
@@ -167,52 +147,6 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.openURL('https://www.kickstarter.com/projects/funkin/friday-night-funkin-the-full-ass-game/');
 		#end
-	}
-	#end
-
-	#if newgrounds
-	function selectLogin()
-	{
-		openNgPrompt(NgPrompt.showLogin());
-	}
-
-	function selectLogout()
-	{
-		openNgPrompt(NgPrompt.showLogout());
-	}
-
-	function showSavedSessionFailed()
-	{
-		openNgPrompt(NgPrompt.showSavedSessionFailed());
-	}
-
-	/**
-	 * Calls openPrompt and redraws the login/logout button
-	 * @param prompt 
-	 * @param onClose 
-	 */
-	public function openNgPrompt(prompt:Prompt, ?onClose:Void->Void)
-	{
-		var onPromptClose = checkLoginStatus;
-		if (onClose != null)
-		{
-			onPromptClose = function()
-			{
-				checkLoginStatus();
-				onClose();
-			}
-		}
-
-		openPrompt(prompt, onPromptClose);
-	}
-
-	function checkLoginStatus()
-	{
-		var prevLoggedIn = menuItems.has("logout");
-		if (prevLoggedIn && !NGio.isLoggedIn)
-			menuItems.resetItem("login", "logout", selectLogout);
-		else if (!prevLoggedIn && NGio.isLoggedIn)
-			menuItems.resetItem("logout", "login", selectLogin);
 	}
 	#end
 
