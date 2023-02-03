@@ -135,6 +135,10 @@ class PlayState extends MusicBeatState
 
 	var talking:Bool = true;
 	var songScore:Int = 0;
+	var missCount:Int = 0;
+	var altScore:Float = 0;
+	var noteCounter:Int = 0;
+
 	var scoreTxt:FlxText;
 
 	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
@@ -849,7 +853,7 @@ class PlayState extends MusicBeatState
 		// healthBar
 		add(healthBar);
 
-		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
+		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 480, healthBarBG.y + 30, 0, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
@@ -1904,7 +1908,43 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = "Score:" + songScore;
+		var accuracy = altScore / noteCounter;
+
+		// round accuracy to 2 decimal places
+		accuracy = Std.int(accuracy * 100) / 100;
+
+		var accuracyStr = "0%";
+
+		if (accuracy > 100)
+			accuracyStr = "100%";
+		else 
+			accuracyStr = Std.string(accuracy) + "%";
+
+		// if accuracyStr is NaN, set it to 0%
+		if (accuracyStr == "NaN%")
+			accuracyStr = "0%";
+		// if accuracyStr is over 100%, set it to 100%
+		// so convert it to a float 
+		else if (Std.parseFloat(accuracyStr) > 100)
+			accuracyStr = "100%";
+		else if (accuracyStr == "Infinity%")
+			accuracyStr = "100%";
+		else if (accuracyStr == "-Infinity%")
+			accuracyStr = "0%";
+		else if (accuracyStr == "-NaN%")
+			accuracyStr = "0%";
+		else if (accuracyStr == "NaN")
+			accuracyStr = "0%";
+		else if (accuracyStr == "-Infinity")
+			accuracyStr = "0%";
+		else if (Std.parseFloat(accuracyStr) < 0)
+			accuracyStr = "0%";
+
+		// if there are 2 % signs, remove the last one
+		if (accuracyStr.indexOf("%") == accuracyStr.lastIndexOf("%"))
+			accuracyStr = accuracyStr.substr(0, accuracyStr.length - 1);
+		// lol im so sorry for that if statement
+		scoreTxt.text = "Score:" + songScore + " / Misses: " + missCount + " / Accuracy: " + accuracyStr + "%";
 
 		if (controls.PAUSE && startedCountdown && canPause)
 		{
@@ -2380,24 +2420,29 @@ class PlayState extends MusicBeatState
 
 		var daRating:String = "sick";
 
+		noteCounter++;
+
 		var isSick:Bool = true;
 
 		if (noteDiff > Conductor.safeZoneOffset * 0.9)
 		{
 			daRating = 'shit';
 			score = 50;
+			altScore += 25.55;
 			isSick = false; // shitty copypaste on this literally just because im lazy and tired lol!
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
 			score = 100;
+			altScore += 50.00;
 			isSick = false;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
 			score = 200;
+			altScore += 75.55;
 			isSick = false;
 		}
 
@@ -2407,6 +2452,8 @@ class PlayState extends MusicBeatState
 			noteSplash.setupNoteSplash(daNote.x, daNote.y, daNote.noteData);
 			// new NoteSplash(daNote.x, daNote.y, daNote.noteData);
 			grpNoteSplashes.add(noteSplash);
+
+			altScore += 100.00;
 		}
 
 		// Only add the score if you're not on practice mode
@@ -2739,6 +2786,9 @@ class PlayState extends MusicBeatState
 		if (!practiceMode)
 			songScore -= 10;
 
+		missCount++;
+		altScore += 1.11;
+
 		vocals.volume = 0;
 		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 
@@ -2772,6 +2822,9 @@ class PlayState extends MusicBeatState
 
 		if (!practiceMode)
 			songScore -= 10;
+
+		missCount++;
+		altScore += 1.11;
 
 		vocals.volume = 0;
 		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
