@@ -2424,27 +2424,27 @@ class PlayState extends MusicBeatState
 
 		var isSick:Bool = true;
 
-		if (noteDiff > Conductor.safeZoneOffset * 0.9)
-		{
-			daRating = 'shit';
-			score = 50;
-			altScore += 25.55;
-			isSick = false; // shitty copypaste on this literally just because im lazy and tired lol!
-		}
-		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
-		{
-			daRating = 'bad';
-			score = 100;
-			altScore += 50.00;
-			isSick = false;
-		}
-		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
-		{
-			daRating = 'good';
-			score = 200;
-			altScore += 75.55;
-			isSick = false;
-		}
+		if (noteDiff > Conductor.safeZoneOffset * 0.95)
+			{
+				daRating = 'shit';
+				score = 50;
+				altScore += 25.55;
+				isSick = false; // shitty copypaste on this literally just because im lazy and tired lol!
+			}
+			else if (noteDiff > Conductor.safeZoneOffset * 0.85)
+			{
+				daRating = 'bad';
+				score = 100;
+				altScore += 50.00;
+				isSick = false;
+			}
+			else if (noteDiff > Conductor.safeZoneOffset * 0.3)
+			{
+				daRating = 'good';
+				score = 200;
+				altScore += 75.55;
+				isSick = false;
+			}
 
 		if (isSick)
 		{
